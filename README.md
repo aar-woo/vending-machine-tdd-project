@@ -1,0 +1,1 @@
+Creating a mini project to build an application representing a vending machine with test driven development principles in mind. Instructions from https://github.com/dwyl/learn-tdd repo.
