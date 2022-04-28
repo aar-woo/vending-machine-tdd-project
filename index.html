@@ -19,7 +19,67 @@
     <script src="https://code.jquery.com/qunit/qunit-1.18.0.js"></script>
 
     <script>
-        
+        function getChange(totalPayable, cashPaid) {
+            'use strict';
+
+            let change = [];
+
+            const coins = [100, 25, 10, 5, 1]; // nothing larger than a dollar is returned as change
+            const numCoinsObj = {};
+
+            let diff = cashPaid - totalPayable;
+            while (diff !== 0) {
+
+                if (diff >= 100) {
+                const numDollars = Math.floor(diff / 100)
+                numCoinsObj.dollars = numDollars;
+                diff -= 100 * numDollars;
+                } 
+
+                if (diff >= 25) {
+                    numCoinsObj.numQuarters = Math.floor(diff / 25);
+                    diff -= 25 * numCoinsObj.numQuarters;
+                }
+ 
+                if (diff >= 10) {
+                    numCoinsObj.numDimes = Math.floor(diff / 10);
+                    diff -= 10 * numCoinsObj.numDimes;
+                }
+
+                if (diff >= 5) {
+                    numCoinsObj.numNickels = Math.floor(diff / 5);
+                    diff -= 5 * numCoinsObj.numNickels;
+                }
+                if (diff < 5) {
+                    numCoinsObj.numPennies = diff;
+                    diff = 0;
+                }
+            }
+          
+            if (diff === 0) {
+                for (const coin in numCoinsObj) {
+                    for (let i = 0; i < numCoinsObj[coin]; i++) {
+                        if (coin === 'dollars') {
+                            change.push(100);
+                        }
+                        if (coin === 'numQuarters') {
+                            change.push(25);
+                        }
+                        if (coin === 'numDimes') {
+                            change.push(10);
+                        }
+                        if (coin === 'numNickels') {
+                            change.push(5);
+                        }
+                        if (coin === 'numPennies') {
+                            change.push(1);
+                        }
+                    }
+                }
+            }
+
+            return change;
+        }
     </script>
 
     <script>
@@ -28,6 +88,25 @@
             var expected = [];
             assert.deepEqual(result, expected);
         }); // use deepEqual for arrays see: https://api.qunitjs.com/deepEqual/
+
+        test('getChange(215, 300) should return [50, 20, 10, 5]', function(assert) {
+            var result = getChange(215, 300); // expect an array containing [50,20,10,5]
+            var expected = [25, 25, 25, 10];
+            assert.deepEqual(result, expected);
+        })
+
+        test('getChange(486, 600) should return [100, 10, 1, 1, 1, 1]', function(assert) {
+            var result = getChange(486, 600); // expect an array containing [100, 10, 1, 1, 1, 1]
+            var expected = [100, 10, 1, 1, 1, 1];
+            assert.deepEqual(result, expected);
+        })
+
+        test('getChange(100, 241) should return [100, 25, 10, 5, 1]', function(assert) {
+            var result = getChange(100, 241); // expect an array containing [100, 25, 10, 5, 1];
+            var expected = [100, 25, 10, 5, 1];
+            assert.deepEqual(result, expected);
+        })
+
     </script>
   </body>
 </html>
